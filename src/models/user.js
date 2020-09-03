@@ -16,7 +16,7 @@ const UserSchema = new mongoose.Schema({
 	password: {
 		type: String,
 		required: true,
-		select: true,
+		select: true, // quando buscar um usuário ou lista de usuários, não vai retornar a senha dela(as)
 	},
 	createdAt: {
 		type: Date,

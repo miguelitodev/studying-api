@@ -10,5 +10,6 @@ app.use(bodyParser.urlencoded({
 })); // para quando passar parametros via URL
 
 require('./controllers/authController')(app);
+require('./controllers/projectController')(app);
 
 app.listen(3000);

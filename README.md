@@ -1,5 +1,5 @@
 <div align="center" id="top"> 
-  <img src="./.github/nodejslogo.png" alt="Node" />
+  <img width="256px" src="./.github/nodejslogo.png" alt="Node" />
 
 &#xa0;
 
