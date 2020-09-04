@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+const mailer = require("../../modules/mailer");
 
 const authConfig = require('../../config/auth.json'); // chamando o hash para add a senha
 
@@ -112,7 +113,21 @@ router.post("/forgot_password", async (req, res) => {
 			useFindAndModify: false
 		});
 
-		console.log(token, now);
+		mailer.sendMail({
+			to: email,
+			from: "miguelrisquelme@gmail.com",
+			template: "auth/forgot_password",
+			context: {
+				token
+			},
+		}, (error) => {
+			if (error) {
+				console.log(error);
+				return res.status(400).send({
+					error: 'Error on forgot password, try again'
+				})
+			}
+		})
 
 	} catch (error) {
 		res.status(400).send({
