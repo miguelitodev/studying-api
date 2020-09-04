@@ -9,7 +9,6 @@ app.use(bodyParser.urlencoded({
     extended: false
 })); // para quando passar parametros via URL
 
-require('./controllers/authController')(app);
-require('./controllers/projectController')(app);
+require('./app/controllers/index')(app); // importa todo os controllers que forem criados
 
 app.listen(3000);

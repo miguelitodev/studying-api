@@ -1,10 +1,14 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
-const authConfig = require('../config/auth.json'); // chamando o hash para add a senha
+const authConfig = require('../../config/auth.json'); // chamando o hash para add a senha
 
 const User = require("./../models/user"); // Model de user para fazer ações de login e cadastro
+const {
+	findOne
+} = require("./../models/user");
 
 const router = express.Router(); // definir rotas apenas para usuarios
 
@@ -76,5 +80,45 @@ router.post("/authenticate", async (req, res) => {
 		})
 	});
 });
+
+router.post("/forgot_password", async (req, res) => {
+	const {
+		email
+	} = req.body;
+
+	try {
+
+		const user = await User.findOne({
+			email
+		}); // verificando se está realmente cadastrado na base de dados
+
+		if (!user)
+			return res.status(400).send({
+				error: "User not found", // caso não exista na base de dados
+			});
+
+		const token = await crypto.randomBytes(20).toString('hex'); // gerar um token para enviar para a pessoa
+
+		const now = new Date();
+		now.setHours(now.getHours() + 1); // hora atual +1 para expirar
+
+		await User.findByIdAndUpdate(user.id, {
+			'$set': {
+				passwordResetToken: token,
+				passwordResetExpires: now,
+			}
+		}, {
+			new: true,
+			useFindAndModify: false
+		});
+
+		console.log(token, now);
+
+	} catch (error) {
+		res.status(400).send({
+			error: 'Error on forgot password, try again'
+		})
+	}
+})
 
 module.exports = (app) => app.use("/auth", router);

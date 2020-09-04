@@ -1,4 +1,4 @@
-const mongoose = require("../database/index");
+const mongoose = require("../../database/index");
 const bcripty = require("bcryptjs");
 
 // Schema é o que vamos ter dentro da tabela user no banco de dados
@@ -17,6 +17,14 @@ const UserSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 		select: true, // quando buscar um usuário ou lista de usuários, não vai retornar a senha dela(as)
+	},
+	passwordResetToken: {
+		type: String,
+		select: false,
+	},
+	passwordResetExpires: {
+		type: Date,
+		select: false,
 	},
 	createdAt: {
 		type: Date,
